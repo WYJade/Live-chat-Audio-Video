@@ -9,8 +9,9 @@ export interface Message {
 }
 
 export interface CallState {
-  status: 'idle' | 'connecting' | 'active' | 'ended';
+  status: 'idle' | 'connecting' | 'ringing' | 'active' | 'ended' | 'declined';
   type: 'voice' | 'video' | null;
+  role: 'caller' | 'receiver' | null;
   contactName: string;
   startTime: Date | null;
   duration: number;
@@ -41,8 +42,9 @@ export const validateMessage = (message: Partial<Message>): message is Message =
 export const validateCallState = (state: Partial<CallState>): state is CallState => {
   return !!(
     state.status &&
-    ['idle', 'connecting', 'active', 'ended'].includes(state.status) &&
+    ['idle', 'connecting', 'ringing', 'active', 'ended', 'declined'].includes(state.status) &&
     (state.type === null || ['voice', 'video'].includes(state.type)) &&
+    (state.role === null || ['caller', 'receiver'].includes(state.role)) &&
     typeof state.contactName === 'string' &&
     typeof state.duration === 'number' &&
     typeof state.isMuted === 'boolean' &&

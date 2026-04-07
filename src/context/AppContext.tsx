@@ -15,6 +15,10 @@ type AppAction =
   | { type: 'SET_UI_STATE'; payload: Partial<UIState> }
   | { type: 'TOGGLE_ACTION_MENU' }
   | { type: 'NAVIGATE_TO_SCREEN'; payload: 'chat' | 'voiceCall' | 'videoCall' }
+  | { type: 'INITIATE_CALL'; payload: { callType: 'voice' | 'video' } }
+  | { type: 'RECEIVE_CALL'; payload: { callType: 'voice' | 'video'; callerName: string } }
+  | { type: 'ACCEPT_CALL' }
+  | { type: 'DECLINE_CALL' }
   | { type: 'END_CALL' }
   | { type: 'SAVE_SCROLL_POSITION'; payload: number };
 
@@ -23,8 +27,8 @@ const initialState: AppState = {
     {
       id: '1',
       senderId: 'other',
-      senderName: 'Alexander Nicholas Williams1111',
-      content: 'Hi, Mengtian😊',
+      senderName: 'Dispatcher Support',
+      content: 'Hi, how can I help you today?',
       timestamp: new Date('2024-01-30T02:34:00'),
       isEdited: false,
       canReEdit: false,
@@ -32,31 +36,23 @@ const initialState: AppState = {
     {
       id: '2',
       senderId: 'other',
-      senderName: 'Alexander Nicholas Williams1111',
-      content: 'You have withdrawn the message',
+      senderName: 'Dispatcher Support',
+      content: 'Feel free to ask any questions about your deliveries or routes.',
       timestamp: new Date('2024-01-30T02:35:00'),
       isEdited: false,
-      canReEdit: true,
-    },
-    {
-      id: '3',
-      senderId: 'other',
-      senderName: 'Alexander Nicholas Williams1111',
-      content: 'You have withdrawn the message',
-      timestamp: new Date('2024-01-30T02:36:00'),
-      isEdited: false,
-      canReEdit: true,
+      canReEdit: false,
     },
   ],
   callState: {
     status: 'idle',
     type: null,
-    contactName: 'Alexander Nicholas Williams1111',
+    contactName: 'Dispatcher Support',
     startTime: null,
     duration: 0,
     isMuted: false,
     isSpeakerOn: false,
     isCameraOn: true,
+    role: null,
   },
   uiState: {
     activeScreen: 'chat',
@@ -100,6 +96,75 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
           isActionMenuOpen: false,
         },
       };
+    case 'INITIATE_CALL':
+      return {
+        ...state,
+        callState: {
+          ...state.callState,
+          status: 'connecting',
+          type: action.payload.callType,
+          role: 'caller',
+          startTime: null,
+          duration: 0,
+          isMuted: false,
+          isSpeakerOn: false,
+          isCameraOn: action.payload.callType === 'video',
+        },
+        uiState: {
+          ...state.uiState,
+          previousScreen: state.uiState.activeScreen,
+          activeScreen: action.payload.callType === 'voice' ? 'voiceCall' : 'videoCall',
+          isActionMenuOpen: false,
+        },
+      };
+    case 'RECEIVE_CALL':
+      return {
+        ...state,
+        callState: {
+          ...state.callState,
+          status: 'ringing',
+          type: action.payload.callType,
+          role: 'receiver',
+          contactName: action.payload.callerName,
+          startTime: null,
+          duration: 0,
+          isMuted: false,
+          isSpeakerOn: false,
+          isCameraOn: action.payload.callType === 'video',
+        },
+        uiState: {
+          ...state.uiState,
+          previousScreen: state.uiState.activeScreen,
+          activeScreen: action.payload.callType === 'voice' ? 'voiceCall' : 'videoCall',
+          isActionMenuOpen: false,
+        },
+      };
+    case 'ACCEPT_CALL':
+      return {
+        ...state,
+        callState: {
+          ...state.callState,
+          status: 'active',
+          startTime: new Date(),
+        },
+      };
+    case 'DECLINE_CALL':
+      return {
+        ...state,
+        callState: {
+          ...state.callState,
+          status: 'declined',
+          type: null,
+          role: null,
+          startTime: null,
+          duration: 0,
+        },
+        uiState: {
+          ...state.uiState,
+          activeScreen: 'chat',
+          previousScreen: null,
+        },
+      };
     case 'END_CALL':
       return {
         ...state,
@@ -107,6 +172,7 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
           ...state.callState,
           status: 'ended',
           type: null,
+          role: null,
           startTime: null,
           duration: 0,
         },
@@ -129,12 +195,19 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
 const AppContext = createContext<{
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
+  showWelcome: boolean;
+  setShowWelcome: (show: boolean) => void;
 } | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [showWelcome, setShowWelcome] = React.useState(false);
 
-  return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{ state, dispatch, showWelcome, setShowWelcome }}>
+      {children}
+    </AppContext.Provider>
+  );
 };
 
 export const useAppContext = () => {

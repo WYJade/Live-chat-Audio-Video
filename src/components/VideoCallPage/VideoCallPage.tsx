@@ -7,6 +7,8 @@ interface VideoCallPageProps {
   isMuted: boolean;
   isSpeakerOn: boolean;
   isCameraOn: boolean;
+  callStatus: string;
+  role: string;
   onMuteToggle: () => void;
   onSpeakerToggle: () => void;
   onCameraToggle: () => void;
@@ -19,13 +21,15 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
   isMuted,
   isSpeakerOn,
   isCameraOn,
+  callStatus,
+  role,
   onMuteToggle,
   onSpeakerToggle,
   onCameraToggle,
   onEndCall,
 }) => {
   const [duration, setDuration] = useState(callDuration);
-  const [isWaiting, setIsWaiting] = React.useState(true);
+  const [isWaiting, setIsWaiting] = React.useState(callStatus === 'connecting');
   const [isFrontCamera, setIsFrontCamera] = React.useState(true);
   const [showGalleryFeedback, setShowGalleryFeedback] = React.useState(false);
   const [showCameraSwitchFeedback, setShowCameraSwitchFeedback] = React.useState(false);
@@ -39,12 +43,16 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
   }, []);
 
   React.useEffect(() => {
-    // Simulate call being accepted after 3 seconds
-    const timer = setTimeout(() => {
+    if (callStatus === 'connecting' && role === 'caller') {
+      const timer = setTimeout(() => {
+        setIsWaiting(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+    if (callStatus === 'active') {
       setIsWaiting(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
+    }
+  }, [callStatus, role]);
 
   const formatDuration = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -183,7 +191,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
           textShadow: '0 3px 10px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.8)',
           letterSpacing: '0.3px',
         }}>
-          Michael Johnson
+          {contactName}
         </h2>
         {isWaiting ? (
           <p style={{ 
@@ -193,7 +201,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
             fontWeight: '400',
             margin: 0,
           }}>
-            Waiting for response...
+            {role === 'caller' ? 'Calling...' : 'Connected'}
           </p>
         ) : (
           <p style={{ 

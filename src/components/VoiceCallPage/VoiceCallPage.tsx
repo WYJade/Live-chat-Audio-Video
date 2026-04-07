@@ -6,6 +6,8 @@ interface VoiceCallPageProps {
   callDuration: number;
   isMuted: boolean;
   isSpeakerOn: boolean;
+  callStatus: string;
+  role: string;
   onMuteToggle: () => void;
   onSpeakerToggle: () => void;
   onEndCall: () => void;
@@ -16,6 +18,8 @@ const VoiceCallPage: React.FC<VoiceCallPageProps> = ({
   callDuration,
   isMuted,
   isSpeakerOn,
+  callStatus,
+  role,
   onMuteToggle,
   onSpeakerToggle,
   onEndCall,
@@ -51,15 +55,19 @@ const VoiceCallPage: React.FC<VoiceCallPageProps> = ({
     border: 'none',
   });
 
-  const [isWaiting, setIsWaiting] = React.useState(true);
+  const [isWaiting, setIsWaiting] = React.useState(callStatus === 'connecting');
 
   React.useEffect(() => {
-    // Simulate call being accepted after 3 seconds
-    const timer = setTimeout(() => {
+    if (callStatus === 'connecting' && role === 'caller') {
+      const timer = setTimeout(() => {
+        setIsWaiting(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+    if (callStatus === 'active') {
       setIsWaiting(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
+    }
+  }, [callStatus, role]);
 
   return (
     <div
@@ -95,12 +103,12 @@ const VoiceCallPage: React.FC<VoiceCallPageProps> = ({
         </div>
         
         <h2 style={{ fontSize: '26px', fontWeight: '500', marginBottom: theme.spacing.sm, textAlign: 'center' }}>
-          John Anderson
+          {contactName}
         </h2>
         
         {isWaiting ? (
           <p style={{ fontSize: '16px', color: theme.colors.textSecondary, textAlign: 'center', marginTop: theme.spacing.md }}>
-            Waiting for response...
+            {role === 'caller' ? 'Calling...' : 'Connected'}
           </p>
         ) : (
           <p style={{ fontSize: '16px', color: theme.colors.textSecondary }}>
