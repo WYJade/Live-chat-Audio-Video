@@ -31,21 +31,48 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onSwitchCompany, onBackTo
     }
   }, [state.uiState.activeScreen, showWelcome, state.messages, dispatch]);
 
-  // Simulate incoming push notification after 8 seconds
+  // Simulate incoming push notifications (grouped, 1-3 items)
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer1 = setTimeout(() => {
       dispatch({
         type: 'ADD_PUSH_NOTIFICATION',
         payload: {
-          id: 'push-' + Date.now(),
+          id: 'push-1-' + Date.now(),
           appIcon: '💬',
-          chatName: 'Alexander Nicholas Williams...',
+          chatName: 'Dispatcher Support',
+          lastMessage: 'Your delivery route has been updated. Please check the new schedule.',
+          timestamp: new Date(),
+        },
+      });
+    }, 6000);
+
+    const timer2 = setTimeout(() => {
+      dispatch({
+        type: 'ADD_PUSH_NOTIFICATION',
+        payload: {
+          id: 'push-2-' + Date.now(),
+          appIcon: '💬',
+          chatName: 'Alexander Nicholas Williams',
           lastMessage: 'Hey, are you available for a pickup at dock 5?',
           timestamp: new Date(),
         },
       });
-    }, 8000);
-    return () => clearTimeout(timer);
+    }, 6200);
+
+    const timer3 = setTimeout(() => {
+      dispatch({
+        type: 'ADD_PUSH_NOTIFICATION',
+        payload: {
+          id: 'push-3-' + Date.now(),
+          appIcon: '💬',
+          chatName: 'Warehouse Team',
+          lastMessage: '📢 Shift change reminder: Please confirm your availability.',
+          timestamp: new Date(),
+        },
+      });
+    }, 6400);
+
+    return () => { clearTimeout(timer1); clearTimeout(timer2); clearTimeout(timer3); };
   }, [dispatch]);
 
   useEffect(() => {
