@@ -29,6 +29,13 @@ export interface PushNotification {
   timestamp: Date;
 }
 
+export interface Company {
+  id: string;
+  name: string;
+  code: string;
+  logo: string;
+}
+
 export interface CallState {
   status: 'idle' | 'connecting' | 'ringing' | 'active' | 'ended' | 'declined';
   type: 'voice' | 'video' | null;

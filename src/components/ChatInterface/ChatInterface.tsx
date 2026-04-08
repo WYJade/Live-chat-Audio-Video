@@ -10,7 +10,12 @@ import VideoCallPage from '../VideoCallPage/VideoCallPage';
 import IncomingCallScreen from '../IncomingCall/IncomingCallScreen';
 import PushNotificationOverlay from '../PushNotification/PushNotificationOverlay';
 
-const ChatInterface: React.FC = () => {
+interface ChatInterfaceProps {
+  onSwitchCompany: () => void;
+  onBackToApp: () => void;
+}
+
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ onSwitchCompany, onBackToApp }) => {
   const { state, dispatch, showWelcome, setShowWelcome } = useAppContext();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -55,7 +60,13 @@ const ChatInterface: React.FC = () => {
     }
   };
 
-  const handleBackClick = () => setShowWelcome(true);
+  const handleBackClick = () => {
+    if (showWelcome) {
+      onBackToApp();
+    } else {
+      setShowWelcome(true);
+    }
+  };
 
   const handleVoiceCallClick = () => {
     handleSaveScrollPosition();
@@ -152,7 +163,7 @@ const ChatInterface: React.FC = () => {
               width: '40px', height: '40px', borderRadius: theme.borderRadius.full,
               backgroundColor: theme.colors.primary, display: 'flex', alignItems: 'center',
               justifyContent: 'center', color: theme.colors.textPrimary, fontWeight: 'bold', fontSize: '18px',
-            }}>D</div>
+            }}>A</div>
             {/* Online indicator */}
             <div style={{
               position: 'absolute', bottom: '0', right: '0', width: '12px', height: '12px',
@@ -161,13 +172,19 @@ const ChatInterface: React.FC = () => {
             }} />
           </div>
           <div>
-            <h3 style={{ fontSize: '16px', fontWeight: '500', color: theme.colors.textPrimary, margin: 0 }}>Dispatcher Support</h3>
-            <p style={{ fontSize: '12px', color: theme.colors.success, margin: 0 }}>Online</p>
+            <h3 style={{ fontSize: '16px', fontWeight: '500', color: theme.colors.textPrimary, margin: 0 }}>Alexander Nicholas Williams1111...</h3>
           </div>
         </div>
         {/* Unread badge on header */}
         {state.totalUnreadCount > 0 && !showWelcome && (
           <UnreadBadge count={state.totalUnreadCount} />
+        )}
+        {/* Three dot menu - matching screenshot */}
+        {!showWelcome && (
+          <button style={{
+            background: 'none', border: 'none', color: theme.colors.textPrimary,
+            fontSize: '20px', cursor: 'pointer', padding: theme.spacing.sm,
+          }}>⋮</button>
         )}
       </div>
 
@@ -178,6 +195,20 @@ const ChatInterface: React.FC = () => {
       }}>
         {showWelcome ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', padding: theme.spacing.xl, textAlign: 'center' }}>
+            {/* Company badge with switch */}
+            {state.selectedCompany && state.companies.length > 1 && (
+              <div onClick={onSwitchCompany} style={{
+                display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px',
+                backgroundColor: theme.colors.surfaceElevated, borderRadius: '20px',
+                cursor: 'pointer', marginBottom: '24px', border: '1px solid rgba(155,135,245,0.3)',
+              }}>
+                <span style={{ fontSize: '16px', fontWeight: 'bold' }}>{state.selectedCompany.logo}</span>
+                <span style={{ fontSize: '14px', color: theme.colors.textPrimary }}>{state.selectedCompany.name}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={theme.colors.textSecondary} strokeWidth={2}>
+                  <polyline points="6 9 12 15 18 9" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            )}
             <h2 style={{ fontSize: '24px', fontWeight: '600', color: theme.colors.textPrimary, marginBottom: theme.spacing.lg }}>Welcome to Dispatcher Support</h2>
             <p style={{ fontSize: '15px', color: theme.colors.textSecondary, lineHeight: '1.6', marginBottom: theme.spacing.md }}>
               This is a chat service to help you with delivery queries and operations

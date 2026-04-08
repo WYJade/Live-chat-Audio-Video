@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { Message, CallState, UIState, ChatContact, PushNotification } from '../types/models';
+import { Message, CallState, UIState, ChatContact, PushNotification, Company } from '../types/models';
 
 interface AppState {
   messages: Message[];
@@ -8,6 +8,8 @@ interface AppState {
   contacts: ChatContact[];
   pushNotifications: PushNotification[];
   totalUnreadCount: number;
+  companies: Company[];
+  selectedCompany: Company | null;
 }
 
 type AppAction =
@@ -26,6 +28,7 @@ type AppAction =
   | { type: 'ACCEPT_CALL' }
   | { type: 'DECLINE_CALL' }
   | { type: 'END_CALL' }
+  | { type: 'SELECT_COMPANY'; payload: Company }
   | { type: 'SAVE_SCROLL_POSITION'; payload: number };
 
 const initialState: AppState = {
@@ -33,39 +36,45 @@ const initialState: AppState = {
     {
       id: '1',
       senderId: 'other',
-      senderName: 'Dispatcher Support',
-      content: 'Hi, how can I help you today?',
-      timestamp: new Date('2024-01-30T02:34:00'),
+      senderName: 'Alexander Nicholas Williams1111',
+      content: 'Hello! How are you doing?',
+      timestamp: new Date('2024-01-30T09:15:00'),
       isEdited: false,
       canReEdit: false,
       isRead: true,
-      readAt: new Date('2024-01-30T02:34:05'),
+      readAt: new Date('2024-01-30T09:15:05'),
       messageType: 'text',
     },
     {
       id: '2',
-      senderId: 'other',
-      senderName: 'Dispatcher Support',
-      content: 'Feel free to ask any questions about your deliveries or routes.',
-      timestamp: new Date('2024-01-30T02:35:00'),
+      senderId: 'me',
+      senderName: 'Me',
+      content: "I'm doing great, thanks for asking!",
+      timestamp: new Date('2024-01-30T09:16:00'),
       isEdited: false,
       canReEdit: false,
-      isRead: false,
-      readAt: null,
+      isRead: true,
+      readAt: new Date('2024-01-30T09:16:05'),
       messageType: 'text',
     },
   ],
   contacts: [
-    { id: 'c1', name: 'Dispatcher Support', avatar: 'D', isOnline: true, lastMessage: 'Feel free to ask any questions...', lastMessageTime: new Date('2024-01-30T02:35:00'), unreadCount: 1 },
-    { id: 'c2', name: 'Alexander Nicholas Williams...', avatar: 'A', isOnline: false, lastMessage: 'You have withdrawn the message', lastMessageTime: new Date('2024-01-30T02:51:00'), unreadCount: 3 },
+    { id: 'c1', name: 'Alexander Nicholas Williams...', avatar: 'A', isOnline: true, lastMessage: "I'm doing great, thanks for asking!", lastMessageTime: new Date('2024-01-30T09:16:00'), unreadCount: 0 },
+    { id: 'c2', name: 'Dispatcher Support', avatar: 'D', isOnline: true, lastMessage: 'Feel free to ask any questions...', lastMessageTime: new Date('2024-01-30T02:35:00'), unreadCount: 2 },
     { id: 'c3', name: 'Tianhao Cui', avatar: 'T', isOnline: true, lastMessage: 'hi', lastMessageTime: new Date('2024-01-30T02:39:00'), unreadCount: 0 },
   ],
   pushNotifications: [],
-  totalUnreadCount: 4,
+  totalUnreadCount: 2,
+  companies: [
+    { id: 'unis', name: 'UNIS', code: 'UNIS-001', logo: 'U' },
+    { id: 'bns', name: 'BNS Logistics', code: 'BNS-002', logo: 'B' },
+    { id: 'alpha', name: 'Alpha Transport', code: 'ALP-003', logo: 'A' },
+  ],
+  selectedCompany: null,
   callState: {
     status: 'idle',
     type: null,
-    contactName: 'Dispatcher Support',
+    contactName: 'Alexander Nicholas Williams1111',
     startTime: null,
     duration: 0,
     isMuted: false,
@@ -221,6 +230,47 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         uiState: {
           ...state.uiState,
           activeScreen: 'chat',
+          previousScreen: null,
+        },
+      };
+    case 'SELECT_COMPANY':
+      return {
+        ...state,
+        selectedCompany: action.payload,
+        // Reset chat data when switching company
+        messages: [
+          {
+            id: '1',
+            senderId: 'other',
+            senderName: 'Dispatcher Support',
+            content: `Hi, welcome to ${action.payload.name}. How can I help you today?`,
+            timestamp: new Date(),
+            isEdited: false,
+            canReEdit: false,
+            isRead: false,
+            readAt: null,
+            messageType: 'text' as const,
+          },
+        ],
+        totalUnreadCount: 1,
+        contacts: [
+          { id: 'c1', name: 'Dispatcher Support', avatar: 'D', isOnline: true, lastMessage: `Welcome to ${action.payload.name}...`, lastMessageTime: new Date(), unreadCount: 1 },
+          { id: 'c2', name: 'Alexander Nicholas Williams...', avatar: 'A', isOnline: false, lastMessage: 'You have withdrawn the message', lastMessageTime: new Date('2024-01-30T02:51:00'), unreadCount: 3 },
+          { id: 'c3', name: 'Tianhao Cui', avatar: 'T', isOnline: true, lastMessage: 'hi', lastMessageTime: new Date('2024-01-30T02:39:00'), unreadCount: 0 },
+        ],
+        pushNotifications: [],
+        callState: {
+          ...state.callState,
+          status: 'idle' as const,
+          type: null,
+          role: null,
+          startTime: null,
+          duration: 0,
+        },
+        uiState: {
+          ...state.uiState,
+          activeScreen: 'chat' as const,
+          isActionMenuOpen: false,
           previousScreen: null,
         },
       };
