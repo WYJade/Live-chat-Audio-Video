@@ -12,6 +12,9 @@ describe('Data Model Validation', () => {
         timestamp: new Date(),
         isEdited: false,
         canReEdit: true,
+        isRead: false,
+        readAt: null,
+        messageType: 'text',
       };
       expect(validateMessage(message)).toBe(true);
     });

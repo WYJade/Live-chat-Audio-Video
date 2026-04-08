@@ -6,6 +6,27 @@ export interface Message {
   timestamp: Date;
   isEdited: boolean;
   canReEdit: boolean;
+  isRead: boolean;
+  readAt: Date | null;
+  messageType: 'text' | 'voice' | 'image' | 'file' | 'system';
+}
+
+export interface ChatContact {
+  id: string;
+  name: string;
+  avatar: string;
+  isOnline: boolean;
+  lastMessage: string;
+  lastMessageTime: Date;
+  unreadCount: number;
+}
+
+export interface PushNotification {
+  id: string;
+  appIcon: string;
+  chatName: string;
+  lastMessage: string;
+  timestamp: Date;
 }
 
 export interface CallState {

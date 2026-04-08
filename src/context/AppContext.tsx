@@ -1,16 +1,22 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { Message, CallState, UIState } from '../types/models';
+import { Message, CallState, UIState, ChatContact, PushNotification } from '../types/models';
 
 interface AppState {
   messages: Message[];
   callState: CallState;
   uiState: UIState;
+  contacts: ChatContact[];
+  pushNotifications: PushNotification[];
+  totalUnreadCount: number;
 }
 
 type AppAction =
   | { type: 'SET_MESSAGES'; payload: Message[] }
   | { type: 'ADD_MESSAGE'; payload: Message }
   | { type: 'UPDATE_MESSAGE'; payload: { id: string; content: string } }
+  | { type: 'MARK_MESSAGES_READ' }
+  | { type: 'ADD_PUSH_NOTIFICATION'; payload: PushNotification }
+  | { type: 'DISMISS_PUSH_NOTIFICATION'; payload: string }
   | { type: 'SET_CALL_STATE'; payload: Partial<CallState> }
   | { type: 'SET_UI_STATE'; payload: Partial<UIState> }
   | { type: 'TOGGLE_ACTION_MENU' }
@@ -32,6 +38,9 @@ const initialState: AppState = {
       timestamp: new Date('2024-01-30T02:34:00'),
       isEdited: false,
       canReEdit: false,
+      isRead: true,
+      readAt: new Date('2024-01-30T02:34:05'),
+      messageType: 'text',
     },
     {
       id: '2',
@@ -41,8 +50,18 @@ const initialState: AppState = {
       timestamp: new Date('2024-01-30T02:35:00'),
       isEdited: false,
       canReEdit: false,
+      isRead: false,
+      readAt: null,
+      messageType: 'text',
     },
   ],
+  contacts: [
+    { id: 'c1', name: 'Dispatcher Support', avatar: 'D', isOnline: true, lastMessage: 'Feel free to ask any questions...', lastMessageTime: new Date('2024-01-30T02:35:00'), unreadCount: 1 },
+    { id: 'c2', name: 'Alexander Nicholas Williams...', avatar: 'A', isOnline: false, lastMessage: 'You have withdrawn the message', lastMessageTime: new Date('2024-01-30T02:51:00'), unreadCount: 3 },
+    { id: 'c3', name: 'Tianhao Cui', avatar: 'T', isOnline: true, lastMessage: 'hi', lastMessageTime: new Date('2024-01-30T02:39:00'), unreadCount: 0 },
+  ],
+  pushNotifications: [],
+  totalUnreadCount: 4,
   callState: {
     status: 'idle',
     type: null,
@@ -76,6 +95,29 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
             ? { ...msg, content: action.payload.content, isEdited: true }
             : msg
         ),
+      };
+    case 'MARK_MESSAGES_READ':
+      return {
+        ...state,
+        messages: state.messages.map((msg) =>
+          !msg.isRead && msg.senderId !== 'me'
+            ? { ...msg, isRead: true, readAt: new Date() }
+            : msg
+        ),
+        totalUnreadCount: 0,
+        contacts: state.contacts.map((c) =>
+          c.id === 'c1' ? { ...c, unreadCount: 0 } : c
+        ),
+      };
+    case 'ADD_PUSH_NOTIFICATION':
+      return {
+        ...state,
+        pushNotifications: [action.payload, ...state.pushNotifications].slice(0, 3),
+      };
+    case 'DISMISS_PUSH_NOTIFICATION':
+      return {
+        ...state,
+        pushNotifications: state.pushNotifications.filter((n) => n.id !== action.payload),
       };
     case 'SET_CALL_STATE':
       return { ...state, callState: { ...state.callState, ...action.payload } };
