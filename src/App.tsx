@@ -96,7 +96,7 @@ const AppContent: React.FC = () => {
     case 'web':
       return <WebLiveChat onSwitchToApp={() => setScreen('wiseHome')} />;
     case 'lockScreen':
-      return <LockScreenPush onDismiss={() => setScreen('wiseHome')} />;
+      return <LockScreenPush onDismiss={() => setScreen('wiseHome')} onTapNotification={() => { setShowWelcome(false); setScreen('chat'); }} />;
     default:
       return null;
   }
