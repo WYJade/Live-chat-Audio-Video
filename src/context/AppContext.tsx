@@ -59,8 +59,8 @@ const initialState: AppState = {
     },
   ],
   contacts: [
-    { id: 'c1', name: 'Alexander Nicholas Williams...', avatar: 'A', isOnline: true, lastMessage: "I'm doing great, thanks for asking!", lastMessageTime: new Date('2024-01-30T09:16:00'), unreadCount: 0 },
-    { id: 'c2', name: 'Dispatcher Support', avatar: 'D', isOnline: true, lastMessage: 'Feel free to ask any questions...', lastMessageTime: new Date('2024-01-30T02:35:00'), unreadCount: 2 },
+    { id: 'c1', name: 'YongQiang', avatar: 'Y', isOnline: true, lastMessage: 'You are welcome', lastMessageTime: new Date('2024-01-30T02:30:00'), unreadCount: 0 },
+    { id: 'c2', name: 'Alexander Nicholas Williams...', avatar: 'A', isOnline: false, lastMessage: 'You have withdrawn the message', lastMessageTime: new Date('2024-01-30T02:51:00'), unreadCount: 3 },
     { id: 'c3', name: 'Tianhao Cui', avatar: 'T', isOnline: true, lastMessage: 'hi', lastMessageTime: new Date('2024-01-30T02:39:00'), unreadCount: 0 },
   ],
   pushNotifications: [],
