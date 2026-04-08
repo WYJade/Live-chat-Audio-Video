@@ -43,8 +43,8 @@ export const validateCallState = (state: Partial<CallState>): state is CallState
   return !!(
     state.status &&
     ['idle', 'connecting', 'ringing', 'active', 'ended', 'declined'].includes(state.status) &&
-    (state.type === null || ['voice', 'video'].includes(state.type)) &&
-    (state.role === null || ['caller', 'receiver'].includes(state.role)) &&
+    (state.type === null || (typeof state.type === 'string' && ['voice', 'video'].includes(state.type))) &&
+    (state.role === null || (typeof state.role === 'string' && ['caller', 'receiver'].includes(state.role))) &&
     typeof state.contactName === 'string' &&
     typeof state.duration === 'number' &&
     typeof state.isMuted === 'boolean' &&
@@ -58,7 +58,7 @@ export const validateUIState = (state: Partial<UIState>): state is UIState => {
     state.activeScreen &&
     ['chat', 'voiceCall', 'videoCall'].includes(state.activeScreen) &&
     typeof state.isActionMenuOpen === 'boolean' &&
-    (state.previousScreen === null || ['chat', 'voiceCall', 'videoCall'].includes(state.previousScreen)) &&
+    (state.previousScreen === null || (typeof state.previousScreen === 'string' && ['chat', 'voiceCall', 'videoCall'].includes(state.previousScreen))) &&
     typeof state.chatScrollPosition === 'number'
   );
 };

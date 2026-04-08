@@ -43,6 +43,7 @@ describe('Data Model Validation', () => {
       const callState: CallState = {
         status: 'active',
         type: 'voice',
+        role: 'caller',
         contactName: 'Jane',
         startTime: new Date(),
         duration: 120,
@@ -57,6 +58,7 @@ describe('Data Model Validation', () => {
       const callState: CallState = {
         status: 'idle',
         type: null,
+        role: null,
         contactName: '',
         startTime: null,
         duration: 0,
