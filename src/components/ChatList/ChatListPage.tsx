@@ -9,7 +9,7 @@ interface ChatListPageProps {
   onBack: () => void;
 }
 
-const ChatListPage: React.FC<ChatListPageProps> = ({ contacts, onSelectContact }) => {
+const ChatListPage: React.FC<ChatListPageProps> = ({ contacts, onSelectContact, onBack }) => {
   return (
     <div style={{
       width: '100%', maxWidth: '480px', height: '100vh', backgroundColor: '#121212',
@@ -30,7 +30,10 @@ const ChatListPage: React.FC<ChatListPageProps> = ({ contacts, onSelectContact }
       <div style={{
         padding: '8px 20px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
-        <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#fff', margin: 0 }}>Chats</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '22px', cursor: 'pointer', padding: '4px' }}>←</button>
+          <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#fff', margin: 0 }}>Chats</h1>
+        </div>
         {/* Headphone icon - orange circle */}
         <div style={{
           width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#ff8c00',
