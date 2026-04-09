@@ -143,19 +143,80 @@ const WebLiveChat: React.FC<WebLiveChatProps> = ({ onSwitchToApp }) => {
         {webCallState.active && (
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100,
-            backgroundColor: webCallState.type === 'video' ? 'rgba(0,0,0,0.95)' : 'rgba(10,10,30,0.97)',
+            backgroundColor: '#0a0a1a',
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px',
           }}>
+            {/* Video call: show remote + local video feeds */}
             {webCallState.type === 'video' && webCallState.status === 'active' && (
-              <div style={{ position: 'absolute', width: '100%', height: '100%', backgroundImage: 'url(https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&h=600&fit=crop&crop=faces)', backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: 0.4 }} />
+              <>
+                {/* Remote video - full background */}
+                <div style={{
+                  position: 'absolute', width: '100%', height: '100%',
+                  backgroundImage: 'url(https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1200&h=800&fit=crop&crop=faces)',
+                  backgroundSize: 'cover', backgroundPosition: 'center',
+                  filter: 'brightness(0.85)',
+                }} />
+                {/* Gradient overlay for controls */}
+                <div style={{
+                  position: 'absolute', width: '100%', height: '100%',
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.7) 100%)',
+                }} />
+                {/* Local video PIP - top right */}
+                <div style={{
+                  position: 'absolute', top: '20px', right: '20px', width: '180px', height: '240px',
+                  borderRadius: '12px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.3)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.5)', zIndex: 10,
+                }}>
+                  {webCallState.isCameraOn ? (
+                    <div style={{
+                      width: '100%', height: '100%',
+                      backgroundImage: 'url(https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=360&h=480&fit=crop&crop=faces)',
+                      backgroundSize: 'cover', backgroundPosition: 'center',
+                    }} />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', backgroundColor: '#2a2a3a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '8px' }}>
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth={2}><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
+                      <span style={{ fontSize: '12px', color: '#888' }}>Camera Off</span>
+                    </div>
+                  )}
+                </div>
+                {/* Remote user name overlay */}
+                <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: 'rgba(155,135,245,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: '14px' }}>{sel?.avatar}</div>
+                  <div>
+                    <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>{sel?.name}</p>
+                    <p style={{ margin: 0, fontSize: '12px', color: 'rgba(255,255,255,0.7)', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>{fmt(webCallState.duration)}</p>
+                  </div>
+                </div>
+              </>
             )}
-            <div style={{ zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-              <div style={{ width: '100px', height: '100px', borderRadius: '50%', backgroundColor: theme.colors.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px', color: '#fff', fontWeight: 'bold' }}>{sel?.avatar}</div>
-              <h2 style={{ color: '#fff', fontSize: '22px', margin: 0 }}>{sel?.name}</h2>
-              <p style={{ color: '#aaa', fontSize: '14px', margin: 0 }}>
-                {webCallState.status === 'connecting' ? 'Calling...' : webCallState.status === 'ringing' ? `Incoming ${webCallState.type} call...` : fmt(webCallState.duration)}
-              </p>
-            </div>
+
+            {/* Video call: ringing/connecting - show avatar */}
+            {webCallState.type === 'video' && webCallState.status !== 'active' && (
+              <>
+                <div style={{ position: 'absolute', width: '100%', height: '100%', backgroundImage: 'url(https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1200&h=800&fit=crop&crop=faces)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(20px) brightness(0.4)' }} />
+                <div style={{ zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '120px', height: '120px', borderRadius: '50%', overflow: 'hidden', border: '4px solid rgba(255,255,255,0.3)' }}>
+                    <div style={{ width: '100%', height: '100%', backgroundImage: 'url(https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=240&h=240&fit=crop&crop=faces)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                  </div>
+                  <h2 style={{ color: '#fff', fontSize: '22px', margin: 0, textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{sel?.name}</h2>
+                  <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', margin: 0 }}>
+                    {webCallState.status === 'connecting' ? 'Calling...' : 'Incoming video call...'}
+                  </p>
+                </div>
+              </>
+            )}
+
+            {/* Voice call - avatar only */}
+            {webCallState.type === 'voice' && (
+              <div style={{ zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '100px', height: '100px', borderRadius: '50%', backgroundColor: theme.colors.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px', color: '#fff', fontWeight: 'bold' }}>{sel?.avatar}</div>
+                <h2 style={{ color: '#fff', fontSize: '22px', margin: 0 }}>{sel?.name}</h2>
+                <p style={{ color: '#aaa', fontSize: '14px', margin: 0 }}>
+                  {webCallState.status === 'connecting' ? 'Calling...' : webCallState.status === 'ringing' ? 'Incoming voice call...' : fmt(webCallState.duration)}
+                </p>
+              </div>
+            )}
 
             {/* Ringing: Accept / Decline */}
             {webCallState.status === 'ringing' && (
@@ -177,16 +238,16 @@ const WebLiveChat: React.FC<WebLiveChatProps> = ({ onSwitchToApp }) => {
 
             {/* Active / Connecting: Controls */}
             {(webCallState.status === 'active' || webCallState.status === 'connecting') && (
-              <div style={{ display: 'flex', gap: '24px', zIndex: 1 }}>
-                <button onClick={() => setWebCallState(s => ({ ...s, isMuted: !s.isMuted }))} style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: webCallState.isMuted ? '#ff3b30' : '#444', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: '24px', zIndex: 10, position: webCallState.type === 'video' && webCallState.status === 'active' ? 'absolute' : 'relative', bottom: webCallState.type === 'video' && webCallState.status === 'active' ? '40px' : 'auto' }}>
+                <button onClick={() => setWebCallState(s => ({ ...s, isMuted: !s.isMuted }))} title={webCallState.isMuted ? 'Unmute' : 'Mute'} style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: webCallState.isMuted ? '#ff3b30' : 'rgba(255,255,255,0.2)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)' }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /></svg>
                 </button>
                 {webCallState.type === 'video' && (
-                  <button onClick={() => setWebCallState(s => ({ ...s, isCameraOn: !s.isCameraOn }))} style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: !webCallState.isCameraOn ? '#ff3b30' : '#444', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <button onClick={() => setWebCallState(s => ({ ...s, isCameraOn: !s.isCameraOn }))} title={webCallState.isCameraOn ? 'Camera Off' : 'Camera On'} style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: !webCallState.isCameraOn ? '#ff3b30' : 'rgba(255,255,255,0.2)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)' }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2}><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
                   </button>
                 )}
-                <button onClick={endCall} style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#ff3b30', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <button onClick={endCall} style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#ff3b30', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(255,59,48,0.4)' }}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3" /><line x1="18" y1="6" x2="6" y2="18" /></svg>
                 </button>
               </div>
