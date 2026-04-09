@@ -62,9 +62,6 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
 
   const handleGalleryClick = () => {
     setShowGalleryFeedback(true);
-    setTimeout(() => setShowGalleryFeedback(false), 1500);
-    // Simulate opening gallery
-    console.log('Opening gallery...');
   };
 
   const handleCameraSwitchClick = () => {
@@ -413,22 +410,33 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
         </div>
       </div>
 
-      {/* Feedback overlays */}
+      {/* Gallery overlay */}
       {showGalleryFeedback && (
         <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          padding: '16px 24px',
-          borderRadius: '12px',
-          color: 'white',
-          fontSize: '14px',
-          zIndex: 1000,
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1001,
+          backgroundColor: 'rgba(0,0,0,0.95)', display: 'flex', flexDirection: 'column',
           animation: 'fadeIn 0.3s ease-out',
         }}>
-          Opening gallery...
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #333' }}>
+            <button onClick={() => setShowGalleryFeedback(false)} style={{ background: 'none', border: 'none', color: '#0a84ff', fontSize: '16px', cursor: 'pointer' }}>Cancel</button>
+            <span style={{ fontSize: '17px', fontWeight: '600', color: '#fff' }}>Choose Photo</span>
+            <span style={{ width: '60px' }}></span>
+          </div>
+          <div style={{ flex: 1, padding: '8px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4px', overflowY: 'auto' }}>
+            {[
+              'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop',
+              'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&h=200&fit=crop',
+              'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&h=200&fit=crop',
+              'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=200&h=200&fit=crop',
+              'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=200&fit=crop',
+              'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop',
+            ].map((url, i) => (
+              <div key={i} onClick={() => { setShowGalleryFeedback(false); }} style={{
+                aspectRatio: '1', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer',
+                backgroundImage: `url(${url})`, backgroundSize: 'cover', backgroundPosition: 'center',
+              }} />
+            ))}
+          </div>
         </div>
       )}
       

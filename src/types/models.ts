@@ -34,6 +34,7 @@ export interface Company {
   name: string;
   code: string;
   logo: string;
+  unreadCount: number;
 }
 
 export interface CallState {

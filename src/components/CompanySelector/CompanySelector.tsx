@@ -1,6 +1,7 @@
 import React from 'react';
 import { Company } from '../../types/models';
 import { theme } from '../../styles/theme';
+import UnreadBadge from '../ChatInterface/UnreadBadge';
 
 interface CompanySelectorProps {
   companies: Company[];
@@ -98,6 +99,9 @@ const CompanySelector: React.FC<CompanySelectorProps> = ({
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={theme.colors.primary} strokeWidth={3}>
                     <polyline points="20 6 9 17 4 12" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
+                )}
+                {!isSelected && company.unreadCount > 0 && (
+                  <UnreadBadge count={company.unreadCount} />
                 )}
               </div>
             );

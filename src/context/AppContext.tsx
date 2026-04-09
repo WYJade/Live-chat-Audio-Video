@@ -66,9 +66,9 @@ const initialState: AppState = {
   pushNotifications: [],
   totalUnreadCount: 2,
   companies: [
-    { id: 'unis', name: 'UNIS', code: 'UNIS-001', logo: 'U' },
-    { id: 'bns', name: 'BNS Logistics', code: 'BNS-002', logo: 'B' },
-    { id: 'alpha', name: 'Alpha Transport', code: 'ALP-003', logo: 'A' },
+    { id: 'unis', name: 'UNIS', code: 'UNIS-001', logo: 'U', unreadCount: 4 },
+    { id: 'bns', name: 'BNS Logistics', code: 'BNS-002', logo: 'B', unreadCount: 12 },
+    { id: 'alpha', name: 'Alpha Transport', code: 'ALP-003', logo: 'A', unreadCount: 0 },
   ],
   selectedCompany: null,
   callState: {
