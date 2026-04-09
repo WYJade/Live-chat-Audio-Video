@@ -74,7 +74,7 @@ const initialState: AppState = {
   callState: {
     status: 'idle',
     type: null,
-    contactName: 'Alexander Nicholas Williams1111',
+    contactName: 'James Mitchell',
     startTime: null,
     duration: 0,
     isMuted: false,
@@ -242,7 +242,7 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
           {
             id: '1',
             senderId: 'other',
-            senderName: 'Dispatcher Support',
+            senderName: 'James Mitchell',
             content: `Hi, welcome to ${action.payload.name}. How can I help you today?`,
             timestamp: new Date(),
             isEdited: false,
@@ -254,7 +254,7 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         ],
         totalUnreadCount: 1,
         contacts: [
-          { id: 'c1', name: 'Dispatcher Support', avatar: 'D', isOnline: true, lastMessage: `Welcome to ${action.payload.name}...`, lastMessageTime: new Date(), unreadCount: 1 },
+          { id: 'c1', name: 'James Mitchell', avatar: 'J', isOnline: true, lastMessage: `Welcome to ${action.payload.name}...`, lastMessageTime: new Date(), unreadCount: 1 },
           { id: 'c2', name: 'Alexander Nicholas Williams...', avatar: 'A', isOnline: false, lastMessage: 'You have withdrawn the message', lastMessageTime: new Date('2024-01-30T02:51:00'), unreadCount: 3 },
           { id: 'c3', name: 'Tianhao Cui', avatar: 'T', isOnline: true, lastMessage: 'hi', lastMessageTime: new Date('2024-01-30T02:39:00'), unreadCount: 0 },
         ],

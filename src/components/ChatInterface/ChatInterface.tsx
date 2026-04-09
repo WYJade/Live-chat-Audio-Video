@@ -8,6 +8,7 @@ import UnreadBadge from './UnreadBadge';
 import VoiceCallPage from '../VoiceCallPage/VoiceCallPage';
 import VideoCallPage from '../VideoCallPage/VideoCallPage';
 import IncomingCallScreen from '../IncomingCall/IncomingCallScreen';
+import PermissionDialog from '../PermissionDialog/PermissionDialog';
 
 interface ChatInterfaceProps {
   onSwitchCompany: () => void;
@@ -18,6 +19,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onSwitchCompany: _onSwitc
   const { state, dispatch, showWelcome, setShowWelcome } = useAppContext();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [permDialog, setPermDialog] = React.useState<{ show: boolean; type: 'microphone' | 'camera_and_microphone'; pendingCallType: 'voice' | 'video' | null }>({ show: false, type: 'microphone', pendingCallType: null });
+  const [micGranted, setMicGranted] = React.useState(false);
+  const [camGranted, setCamGranted] = React.useState(false);
 
   // Mark messages as read when viewing chat
   useEffect(() => {
@@ -50,10 +54,37 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onSwitchCompany: _onSwitc
     }
   };
 
-  const handleVoiceCallClick = () => { handleSaveScrollPosition(); dispatch({ type: 'INITIATE_CALL', payload: { callType: 'voice' } }); };
-  const handleVideoCallClick = () => { handleSaveScrollPosition(); dispatch({ type: 'INITIATE_CALL', payload: { callType: 'video' } }); };
-  const handleSimulateIncomingVoice = () => { dispatch({ type: 'RECEIVE_CALL', payload: { callType: 'voice', callerName: 'Dispatcher Support' } }); };
-  const handleSimulateIncomingVideo = () => { dispatch({ type: 'RECEIVE_CALL', payload: { callType: 'video', callerName: 'Dispatcher Support' } }); };
+  const handleVoiceCallClick = () => {
+    if (!micGranted) {
+      setPermDialog({ show: true, type: 'microphone', pendingCallType: 'voice' });
+      return;
+    }
+    handleSaveScrollPosition();
+    dispatch({ type: 'INITIATE_CALL', payload: { callType: 'voice' } });
+  };
+  const handleVideoCallClick = () => {
+    if (!micGranted || !camGranted) {
+      setPermDialog({ show: true, type: 'camera_and_microphone', pendingCallType: 'video' });
+      return;
+    }
+    handleSaveScrollPosition();
+    dispatch({ type: 'INITIATE_CALL', payload: { callType: 'video' } });
+  };
+  const handlePermAllow = () => {
+    if (permDialog.type === 'microphone') setMicGranted(true);
+    if (permDialog.type === 'camera_and_microphone') { setMicGranted(true); setCamGranted(true); }
+    const callType = permDialog.pendingCallType;
+    setPermDialog({ show: false, type: 'microphone', pendingCallType: null });
+    if (callType) {
+      handleSaveScrollPosition();
+      dispatch({ type: 'INITIATE_CALL', payload: { callType } });
+    }
+  };
+  const handlePermDeny = () => {
+    setPermDialog({ show: false, type: 'microphone', pendingCallType: null });
+  };
+  const handleSimulateIncomingVoice = () => { dispatch({ type: 'RECEIVE_CALL', payload: { callType: 'voice', callerName: 'James Mitchell' } }); };
+  const handleSimulateIncomingVideo = () => { dispatch({ type: 'RECEIVE_CALL', payload: { callType: 'video', callerName: 'James Mitchell' } }); };
   const handleAcceptCall = () => dispatch({ type: 'ACCEPT_CALL' });
   const handleDeclineCall = () => {
     dispatch({ type: 'DECLINE_CALL' });
@@ -205,6 +236,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onSwitchCompany: _onSwitc
         <div style={{ fontSize: '24px', opacity: 0.5 }}>☰</div>
         <div style={{ fontSize: '24px', opacity: 0.5 }}>◁</div>
       </div>
+
+      {/* Permission Dialog */}
+      {permDialog.show && (
+        <PermissionDialog type={permDialog.type} onAllow={handlePermAllow} onDeny={handlePermDeny} />
+      )}
     </div>
   );
 };

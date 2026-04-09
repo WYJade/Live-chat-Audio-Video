@@ -48,7 +48,7 @@ const LockScreenPush: React.FC<LockScreenPushProps> = ({ onDismiss, onTapNotific
 
   // Scenario 1: Single chat message
   const scenario1: PushItem[] = [
-    { id: 's1-1', sourceType: 'chat', sourceName: 'Project Discussion Group', lastMessage: 'Meeting tomorrow moved to 3 PM. Please update your calendar.', messageType: 'text', timestamp: new Date(), unreadCount: 1 },
+    { id: 's1-1', sourceType: 'chat', sourceName: 'James Mitchell', lastMessage: 'Meeting tomorrow moved to 3 PM. Please update your calendar.', messageType: 'text', timestamp: new Date(), unreadCount: 1 },
   ];
 
   // Scenario 2: 3 messages merged (within 10s window)
@@ -60,7 +60,7 @@ const LockScreenPush: React.FC<LockScreenPushProps> = ({ onDismiss, onTapNotific
 
   // Scenario 3: Edge cases (image, recalled, system)
   const scenario3: PushItem[] = [
-    { id: 's3-1', sourceType: 'chat', sourceName: 'Dispatcher Support', lastMessage: '', messageType: 'image', timestamp: new Date(), unreadCount: 1 },
+    { id: 's3-1', sourceType: 'chat', sourceName: 'James Mitchell', lastMessage: '', messageType: 'image', timestamp: new Date(), unreadCount: 1 },
     { id: 's3-2', sourceType: 'chat', sourceName: 'Tianhao Cui', lastMessage: '', messageType: 'recalled', timestamp: new Date(Date.now() - 2000), unreadCount: 1 },
     { id: 's3-3', sourceType: 'system', sourceName: 'Warehouse Team Channel', lastMessage: 'Eddie Yang has joined the channel', messageType: 'system', timestamp: new Date(Date.now() - 5000), unreadCount: 0 },
   ];
