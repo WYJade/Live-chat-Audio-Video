@@ -295,27 +295,52 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
           </div>
         </div>
 
-        {/* End call button row */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.sm, marginTop: theme.spacing.sm }}>
-          <button
-            onClick={onEndCall}
-            style={{
-              width: '72px', height: '72px', minWidth: theme.touchTarget.minimum, minHeight: theme.touchTarget.minimum,
-              borderRadius: theme.borderRadius.full, backgroundColor: '#ff3b30',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', border: 'none', boxShadow: '0 4px 16px rgba(255,59,48,0.4)',
-            }}
-            aria-label="End call"
-          >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M3 5a2 2 0 0 1 2-2h3.28a1 1 0 0 1 .948.684l1.498 4.493a1 1 0 0 1-.502 1.21l-2.257 1.13a11.042 11.042 0 0 0 5.516 5.516l1.13-2.257a1 1 0 0 1 1.21-.502l4.493 1.498a1 1 0 0 1 .684.949V19a2 2 0 0 1-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              <line x1="18" y1="6" x2="6" y2="18" strokeLinecap="round" />
-            </svg>
-          </button>
-          <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.95)', textAlign: 'center', fontWeight: '500', textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
-            End Call
-          </span>
+        {/* End call button row with camera switch */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '40px', marginTop: theme.spacing.sm }}>
+          {/* End call button */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.sm }}>
+            <button
+              onClick={onEndCall}
+              style={{
+                width: '72px', height: '72px', minWidth: theme.touchTarget.minimum, minHeight: theme.touchTarget.minimum,
+                borderRadius: theme.borderRadius.full, backgroundColor: '#ff3b30',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', border: 'none', boxShadow: '0 4px 16px rgba(255,59,48,0.4)',
+              }}
+              aria-label="End call"
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M3 5a2 2 0 0 1 2-2h3.28a1 1 0 0 1 .948.684l1.498 4.493a1 1 0 0 1-.502 1.21l-2.257 1.13a11.042 11.042 0 0 0 5.516 5.516l1.13-2.257a1 1 0 0 1 1.21-.502l4.493 1.498a1 1 0 0 1 .684.949V19a2 2 0 0 1-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                <line x1="18" y1="6" x2="6" y2="18" strokeLinecap="round" />
+              </svg>
+            </button>
+            <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.95)', textAlign: 'center', fontWeight: '500', textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
+              End Call
+            </span>
+          </div>
+
+          {/* Camera switch button */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.xs }}>
+            <button
+              onClick={() => console.log('Switch camera')}
+              style={{
+                width: '52px', height: '52px', minWidth: theme.touchTarget.minimum, minHeight: theme.touchTarget.minimum,
+                borderRadius: theme.borderRadius.full,
+                backgroundColor: 'rgba(60, 60, 60, 0.8)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', border: '2px solid rgba(255,255,255,0.3)',
+                backdropFilter: 'blur(10px)', transition: 'all 0.2s',
+              }}
+              aria-label="Switch camera"
+            >
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="white" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
