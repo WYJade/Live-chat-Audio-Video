@@ -296,7 +296,10 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
         </div>
 
         {/* End call button row with camera switch */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: theme.spacing.sm, position: 'relative', width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: theme.spacing.sm, width: '100%', gap: '32px' }}>
+          {/* Spacer for centering */}
+          <div style={{ width: '52px' }} />
+
           {/* End call button - centered */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.sm }}>
             <button
@@ -320,24 +323,23 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
             </span>
           </div>
 
-          {/* Camera switch button - positioned to the right */}
-          <div style={{ position: 'absolute', right: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.xs }}>
+          {/* Camera switch button - right side */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '10px' }}>
             <button
               onClick={() => console.log('Switch camera')}
               style={{
-                width: '52px', height: '52px', minWidth: theme.touchTarget.minimum, minHeight: theme.touchTarget.minimum,
+                width: '52px', height: '52px',
                 borderRadius: theme.borderRadius.full,
                 backgroundColor: 'rgba(60, 60, 60, 0.8)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer', border: '2px solid rgba(255,255,255,0.3)',
-                backdropFilter: 'blur(10px)', transition: 'all 0.2s',
+                backdropFilter: 'blur(10px)',
               }}
               aria-label="Switch camera"
             >
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
                 <circle cx="12" cy="13" r="4" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="white" />
               </svg>
             </button>
           </div>
