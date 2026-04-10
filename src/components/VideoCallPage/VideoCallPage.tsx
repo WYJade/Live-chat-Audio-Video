@@ -296,8 +296,8 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
         </div>
 
         {/* End call button row with camera switch */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '40px', marginTop: theme.spacing.sm }}>
-          {/* End call button */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: theme.spacing.sm, position: 'relative', width: '100%' }}>
+          {/* End call button - centered */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.sm }}>
             <button
               onClick={onEndCall}
@@ -320,8 +320,8 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
             </span>
           </div>
 
-          {/* Camera switch button */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.xs }}>
+          {/* Camera switch button - positioned to the right */}
+          <div style={{ position: 'absolute', right: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.xs }}>
             <button
               onClick={() => console.log('Switch camera')}
               style={{
