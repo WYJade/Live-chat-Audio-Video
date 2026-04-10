@@ -30,10 +30,6 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
 }) => {
   const [duration, setDuration] = useState(callDuration);
   const [isWaiting, setIsWaiting] = React.useState(callStatus === 'connecting');
-  const [isFrontCamera, setIsFrontCamera] = React.useState(true);
-  const [showGalleryFeedback, setShowGalleryFeedback] = React.useState(false);
-  const [showCameraSwitchFeedback, setShowCameraSwitchFeedback] = React.useState(false);
-
   useEffect(() => {
     const timer = setInterval(() => {
       setDuration((prev) => prev + 1);
@@ -58,17 +54,6 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleGalleryClick = () => {
-    setShowGalleryFeedback(true);
-  };
-
-  const handleCameraSwitchClick = () => {
-    setIsFrontCamera(!isFrontCamera);
-    setShowCameraSwitchFeedback(true);
-    setTimeout(() => setShowCameraSwitchFeedback(false), 1000);
-    console.log(`Switched to ${!isFrontCamera ? 'front' : 'back'} camera`);
   };
 
   const controlButtonStyle = (isActive: boolean, color?: string): React.CSSProperties => ({
@@ -310,153 +295,30 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({
           </div>
         </div>
 
-        {/* End call button row 2 with gallery and camera switch */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '40px', marginTop: theme.spacing.sm }}>
-          {/* Gallery button - left side */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.xs }}>
-            <button
-              onClick={handleGalleryClick}
-              style={{
-                width: '52px',
-                height: '52px',
-                minWidth: theme.touchTarget.minimum,
-                minHeight: theme.touchTarget.minimum,
-                borderRadius: theme.borderRadius.full,
-                backgroundColor: showGalleryFeedback ? 'rgba(155, 135, 245, 0.3)' : 'rgba(60, 60, 60, 0.8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                border: '2px solid rgba(255,255,255,0.3)',
-                backdropFilter: 'blur(10px)',
-                transition: 'all 0.2s',
-              }}
-              aria-label="Open gallery"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2}>
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" fill="white" />
-                <polyline points="21 15 16 10 5 21" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-          </div>
-
-          {/* End call button - center */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.sm }}>
-            <button
-              onClick={onEndCall}
-              style={{
-                width: '72px',
-                height: '72px',
-                minWidth: theme.touchTarget.minimum,
-                minHeight: theme.touchTarget.minimum,
-                borderRadius: theme.borderRadius.full,
-                backgroundColor: '#ff3b30',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                border: 'none',
-                boxShadow: '0 4px 16px rgba(255,59,48,0.4)',
-              }}
-              aria-label="End call"
-            >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5}>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 5a2 2 0 0 1 2-2h3.28a1 1 0 0 1 .948.684l1.498 4.493a1 1 0 0 1-.502 1.21l-2.257 1.13a11.042 11.042 0 0 0 5.516 5.516l1.13-2.257a1 1 0 0 1 1.21-.502l4.493 1.498a1 1 0 0 1 .684.949V19a2 2 0 0 1-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                />
-                <line x1="18" y1="6" x2="6" y2="18" strokeLinecap="round" />
-              </svg>
-            </button>
-            <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.95)', textAlign: 'center', fontWeight: '500', textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
-              End Call
-            </span>
-          </div>
-
-          {/* Camera switch button - right side */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.xs }}>
-            <button
-              onClick={handleCameraSwitchClick}
-              style={{
-                width: '52px',
-                height: '52px',
-                minWidth: theme.touchTarget.minimum,
-                minHeight: theme.touchTarget.minimum,
-                borderRadius: theme.borderRadius.full,
-                backgroundColor: showCameraSwitchFeedback ? 'rgba(155, 135, 245, 0.3)' : 'rgba(60, 60, 60, 0.8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                border: '2px solid rgba(255,255,255,0.3)',
-                backdropFilter: 'blur(10px)',
-                transition: 'all 0.2s',
-              }}
-              aria-label="Switch camera"
-            >
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2}>
-                {/* Camera body */}
-                <path strokeLinecap="round" strokeLinejoin="round" d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                <circle cx="12" cy="13" r="4" />
-                {/* Rotation arrows */}
-                <path strokeLinecap="round" strokeLinejoin="round" d="M18 8.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="white" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.5 3.5L6 6l2.5 2.5" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.5 20.5L18 18l-2.5-2.5" />
-              </svg>
-            </button>
-          </div>
+        {/* End call button row */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: theme.spacing.sm, marginTop: theme.spacing.sm }}>
+          <button
+            onClick={onEndCall}
+            style={{
+              width: '72px', height: '72px', minWidth: theme.touchTarget.minimum, minHeight: theme.touchTarget.minimum,
+              borderRadius: theme.borderRadius.full, backgroundColor: '#ff3b30',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', border: 'none', boxShadow: '0 4px 16px rgba(255,59,48,0.4)',
+            }}
+            aria-label="End call"
+          >
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M3 5a2 2 0 0 1 2-2h3.28a1 1 0 0 1 .948.684l1.498 4.493a1 1 0 0 1-.502 1.21l-2.257 1.13a11.042 11.042 0 0 0 5.516 5.516l1.13-2.257a1 1 0 0 1 1.21-.502l4.493 1.498a1 1 0 0 1 .684.949V19a2 2 0 0 1-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              <line x1="18" y1="6" x2="6" y2="18" strokeLinecap="round" />
+            </svg>
+          </button>
+          <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.95)', textAlign: 'center', fontWeight: '500', textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
+            End Call
+          </span>
         </div>
       </div>
 
-      {/* Gallery overlay */}
-      {showGalleryFeedback && (
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1001,
-          backgroundColor: 'rgba(0,0,0,0.95)', display: 'flex', flexDirection: 'column',
-          animation: 'fadeIn 0.3s ease-out',
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #333' }}>
-            <button onClick={() => setShowGalleryFeedback(false)} style={{ background: 'none', border: 'none', color: '#0a84ff', fontSize: '16px', cursor: 'pointer' }}>Cancel</button>
-            <span style={{ fontSize: '17px', fontWeight: '600', color: '#fff' }}>Choose Photo</span>
-            <span style={{ width: '60px' }}></span>
-          </div>
-          <div style={{ flex: 1, padding: '8px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4px', overflowY: 'auto' }}>
-            {[
-              'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop',
-              'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&h=200&fit=crop',
-              'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&h=200&fit=crop',
-              'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=200&h=200&fit=crop',
-              'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=200&fit=crop',
-              'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop',
-            ].map((url, i) => (
-              <div key={i} onClick={() => { setShowGalleryFeedback(false); }} style={{
-                aspectRatio: '1', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer',
-                backgroundImage: `url(${url})`, backgroundSize: 'cover', backgroundPosition: 'center',
-              }} />
-            ))}
-          </div>
-        </div>
-      )}
-      
-      {showCameraSwitchFeedback && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          padding: '16px 24px',
-          borderRadius: '12px',
-          color: 'white',
-          fontSize: '14px',
-          zIndex: 1000,
-          animation: 'fadeIn 0.3s ease-out',
-        }}>
-          Switched to {isFrontCamera ? 'front' : 'back'} camera
-        </div>
-      )}
     </div>
   );
 };
